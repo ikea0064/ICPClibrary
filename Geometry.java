@@ -1,4 +1,3 @@
-package ICPClibrary;
 import java.awt.geom.*;
 import java.util.*;
 
@@ -72,7 +71,7 @@ public class Geometry {
 		return new Point2D.Double(p.getX() * value, p.getY() * value);
 	}
 	
-	//ノーム
+	//ノーム（距離の2乗）
 	private double norm(Point2D p){
 		return p.getX() * p.getX() + p.getY() * p.getY();
 	}
