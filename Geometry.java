@@ -624,10 +624,8 @@ public class Geometry {
 	
 //==========not Library ?====================
 	
-	//AOJ1283 Most Distant Point from the Sea
 	//多角形の辺をmidの値分内側に平行移動させた線分を返す。
 	//p1,p2は２辺の頂点, midはその距離。
-	//この問題は２分探索で、ポリゴンカットして、多角形が残っている最大のmidを求めていく問題。
 	private Line2D getcutV(Point2D p1, Point2D p2, double mid) {
 		Point2D p2p1 = sub(p2, p1);
 		double p1p2Dis = p1.distance(p2);
@@ -641,7 +639,6 @@ public class Geometry {
 	}
 	
 	//半径1の円周上の２点から中心点を求める
-	//AOJ1132 Circle and Points
 	private Point2D[] centerPoint(Point2D p1, Point2D p2) {
 		double r = 1.0;
 		double midx = (p1.getX() + p2.getX()) / 2.0;
