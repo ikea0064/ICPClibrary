@@ -2,6 +2,6 @@ javaのICPCのライブラリです。
 
 動作は保証しません。
 
-Geometry.java　幾何問題のライブラリ
-
-Other.java　その他のライブラリ
+・Geometry.java　幾何問題のライブラリ
+・Other.java　その他のライブラリ
+・Template.java 入力形式とかのテンプレート
