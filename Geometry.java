@@ -1,7 +1,9 @@
+package ICPClibrary;
 import java.awt.geom.*;
 import java.util.*;
+
 public class Geometry {
-  /*
+	/*
 <目次>
 ・おまじない（EPS, comparator）
 ベクトル系
@@ -15,7 +17,7 @@ public class Geometry {
 円
 ・円と円の交点・円と直線の交点・半径rの弧の長さ
 面積
-・多角形の面積・ヘロンの公式・ピックの定理・数値積分
+・多角形の面積・ヘロンの公式・ピックの定理・数値積分・解の公式・fx関数
 幾何応用
 ・凸包・凸カット・垂直二等分線・同じかどうか・線分アレンジメント
 3次元
@@ -70,7 +72,7 @@ public class Geometry {
 		return new Point2D.Double(p.getX() * value, p.getY() * value);
 	}
 	
-	//ノーム（距離の2乗）
+	//ノーム
 	private double norm(Point2D p){
 		return p.getX() * p.getX() + p.getY() * p.getY();
 	}
@@ -319,6 +321,32 @@ public class Geometry {
 	}
 	
 	//数値積分
+
+	//関数fを使った区間aからbまでのシンプソン公式
+	private double simpson(int [] f,double a, double b){
+		double nowsum = 0;
+		int separatesize = 10000;
+		double deltaX = (b - a) / (2 * separatesize);
+		nowsum = calcF(f, a) + 4.0 * calcF(f, a + deltaX) + calcF(f, b);
+		
+		for(int j = 1; j < separatesize; j++){
+			nowsum += 2.0 * calcF(f,a + 2 * j * deltaX) + 
+					4.0 * calcF(f, a + (2 * j + 1) * deltaX);
+		}
+		nowsum = deltaX * nowsum / 3.0;
+		return nowsum;
+	}
+
+	//シンプソン公式に使うときの関数fxの中身。必要に応じて変える
+	//この中身は、2次関数の放物線の長さをもとめている
+	//sqrt(1 + fx')
+	private double calcF(int[] f, double range) {
+		double a = 2 * f[0] * range;
+		double b = f[1];
+		double sq = 1 + (a + b) * (a + b);
+		return Math.sqrt(sq);
+	}
+	
 	//蟻本のまる写し。よくわかっていない
 	class Integral{
 		int m,n;
@@ -378,6 +406,34 @@ public class Geometry {
 			}
 			return res;
 		}
+	}
+
+	//2次方程式のx値を求める(解の公式)
+	//aが0のときにも対応。虚数のときは空の配列を返す
+	private double[] calcXByF(int a, int b, int c) {
+		if(a == 0){
+			return new double[]{-1.0 * c / b};
+		}
+		
+		int d = b * b - 4 * a * c;
+		if(d < 0){
+			return new double[]{};
+		}
+		else if(d == 0){
+			return new double[]{(-1 * b) / (2 * a)};
+		}
+		else{
+			double sqrt = Math.sqrt(d);
+			double res1 = (-1 * b + sqrt) / (2 * a);
+			double res2 = (-1 * b - sqrt) / (2 * a);
+			return new double []{res1, res2};
+		}
+	}
+	
+	//2次関数のfx値を求める
+	private double calcFx(int [] f, double resx) {
+		double res = f[0] * resx * resx + f[1] * resx + f[2];
+		return res;
 	}
 	
 	//======幾何応用=====
@@ -624,7 +680,6 @@ public class Geometry {
 //==========not Library ?====================
 	
 	//多角形の辺をmidの値分内側に平行移動させた線分を返す。
-	//p1,p2は２辺の頂点, midはその距離。
 	private Line2D getcutV(Point2D p1, Point2D p2, double mid) {
 		Point2D p2p1 = sub(p2, p1);
 		double p1p2Dis = p1.distance(p2);

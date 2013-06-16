@@ -1,3 +1,4 @@
+package ICPClibrary;
 import java.io.*;
 import java.util.*;
 import java.util.regex.*;
@@ -7,7 +8,7 @@ import java.util.regex.*;
 ・サイコロ・サイコロの等価比較・構文解析
 数論
 ・エラトステネスのふるい・最大公約数・最小公倍数・バイナリサーチ・素因数分解・べき剰余
-・行列累乗・行列積
+・行列累乗・行列積・ガウスの消去法・ライツアウト（ガウスの消去法）
 データ構造
 ・union-find
 グラフ, フロー
@@ -26,8 +27,9 @@ import java.util.regex.*;
  */
 
 public class Other {
-  
+	
 	int INF = 1 << 24;
+	double EPS = 10.e-08;
 	
 	//======クラスライブラリ========
 	
@@ -311,6 +313,87 @@ public class Other {
 			}
 		}
 		return c;
+	}
+	
+	//ガウスの消去法
+	//解がないか、一意でない時はnullを返す
+	private double [] gauss_jordan(double  [][] A, double [] b){
+		int n = A.length;
+		double [][] B = new double[n][n + 1];
+		for(int i = 0; i < n; i++){
+			for(int j = 0; j < n; j++){
+				B[i][j] = A[i][j];
+			}
+		}
+		
+		for(int i = 0; i < n; i++){
+			B[i][n] = b[i];
+		}
+		
+		for(int i = 0; i < n; i++){
+			int pivot = i;
+			for(int j = i; j < n; j++){
+				if(Math.abs(B[j][i]) > Math.abs(B[pivot][i])) pivot = j;
+			}
+			for(int j = 0; j <= n; j++){
+				double temp = B[i][j];
+				B[i][j] = B[pivot][j];
+				B[pivot][j] = temp;
+			}
+			
+			if(Math.abs(B[i][i]) < EPS) return null;
+			
+			for(int j = i + 1; j <= n; j++) B[i][j] /= B[i][i];
+			for(int j = 0; j < n; j++){
+				if(i != j){
+					for(int k = i + 1; k <= n; k++){
+						B[j][k] -= B[j][i] * B[i][k];
+					}
+				}
+			}
+		}
+		double [] res = new double[n];
+		for(int i = 0; i < n; i++){
+			res[i] = B[i][n];
+		}
+		return res;
+	}
+	
+	//ライツアウトの解があるかどうかを返す
+	//a[i][j] = j番目のボタンを押した時にi番目のボタンに影響があるなら1が格納されている
+	//a[i][n]には、現在の状態が格納されている
+	//実際にはmod2の連立方程式を解くだけなので、xorの計算でよい
+	//最後の方で[i][i] == 0で[i][n] == 0ならば解が不定、0以外なら解なし
+	private boolean lightsOut(int[][] a) {
+		int n = a.length;
+		for(int i = 0; i < n; i++){
+			int pivot = i;
+			for(int j = i; j < n; j++){
+				if(Math.abs(a[j][i]) > Math.abs(a[pivot][i])) pivot = j;
+			}
+			
+			if(Math.abs(a[pivot][i]) == 0) continue;
+			
+			for(int j = 0; j <= n; j++){
+				int temp = a[i][j];
+				a[i][j] = a[pivot][j];
+				a[pivot][j] = temp;
+			}
+			
+			for(int j = 0; j < n; j++){
+				if(i != j && a[j][i] != 0){
+					for(int k = i; k <= n; k++){
+						a[j][k] ^= a[i][k];
+					}
+				}
+			}
+		}
+		for(int i = 0; i < n; i++){
+			if(a[i][i] == 0 && a[i][n] != 0){
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	//======データ構造=====
@@ -957,6 +1040,6 @@ public class Other {
 	*/
 	
 	//重複組み合わせ
-	//重複組み合わせとは，ある数を複数使用して良い組み合わせのことです。
+	//重複組み合わせとは，ある数を複数使用して良い組み合わせのこと
 	//nHr = n+r-1Cr
 }
