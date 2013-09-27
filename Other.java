@@ -30,6 +30,7 @@ public class Other {
 	
 	int INF = 1 << 24;
 	double EPS = 10.e-08;
+	int MOD = 1000000009;
 	
 	//======クラスライブラリ========
 	
@@ -300,11 +301,40 @@ public class Other {
 		}
 		return b;
 	}
+	
+	//行列累乗のlong版。aのn乗の行列を返す。O(log n)
+	private long[][] matrixPow(long[][] a, long n) {
+		long [][] b = new long[a.length][a[0].length];
+		for(int i = 0 ; i < a.length; i++){
+			b[i][i] = 1;
+		}
+		while( n > 0){
+			if((n & 1) != 0){
+				b = mul(b , a);
+			}
+			a = mul(a,a);
+			n >>= 1;
+		}
+		return b;
+	}
 
 	//行列演算。a * bの行列を返す
 	private int[][] mul(int[][] a, int[][] b) {
-		int MOD = 10000;
 		int [][] c = new int[a.length][b[0].length];
+		for(int i = 0 ; i < a.length; i++){
+			for(int k = 0 ; k < b.length; k++){
+				for(int j = 0 ; j < b[0].length; j++){
+					c[i][j] = (c[i][j] + a[i][k] * b[k][j]) % MOD;
+				}
+			}
+		}
+		return c;
+	}
+	
+
+	////行列演算のlong版。a * bの行列を返す。array[たて][よこ]
+	private long[][] mul(long[][] a, long[][] b) {
+		long [][] c = new long[a.length][b[0].length];
 		for(int i = 0 ; i < a.length; i++){
 			for(int k = 0 ; k < b.length; k++){
 				for(int j = 0 ; j < b[0].length; j++){
