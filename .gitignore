@@ -4,3 +4,13 @@
 *.jar
 *.war
 *.ear
+
+# Eclipse
+.project
+.classpath
+.settings
+
+# OS
+Thumbs.db
+.DS_Store
+/bin/

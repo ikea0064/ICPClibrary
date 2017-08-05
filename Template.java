@@ -1,5 +1,3 @@
-package ICPClibrary;
-
 import java.util.*;  //Scanner, ArrayListなど
 import java.awt.geom.*; //Point2D, Line2Dなど
 import java.io.*;      //BufferedReaderなど

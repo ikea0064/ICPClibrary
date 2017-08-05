@@ -1,7 +1,3 @@
-javaのICPCのライブラリです。
-
-動作は保証しません。
-
-・Geometry.java　幾何問題のライブラリ
-・Other.java　その他のライブラリ
-・Template.java 入力形式とかのテンプレート
+Procon
+====
+プロコン用のライブラリ
